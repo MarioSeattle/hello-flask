@@ -8,16 +8,17 @@ import jinja2
 
 
 #Make a new file system path by joining the location of the current files with templates dir
-template_dir = os.path.join(os.path.dirname(__file__),
-    'templates')
+
+#Make a new file system path by joining the location of the current files with templates dir
+
+template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 
 #initialized
-jinja_env = jinja2.Environment(
-    loader = jinja2.FileSystemLoader(template_dir),autoescape=True)
+
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-
 
 @app.route("/")
 def index():
@@ -36,12 +37,14 @@ def display_time_form():
     template = jinja_env.get_template('time_form.html')
     return template.render()
 
+
 def is_integer(num):
     try:
         int(num)
         return True
     except ValueError:
         return False
+        
 
 @app.route('/validate-time', methods=['POST'])
 def validate_time():
@@ -86,12 +89,17 @@ def valid_time():
     time = request.args.get('time')
     return '<h1>You submitted {0}. Thanks for submitting a valid time!</h1>'.format(time)
 
+
 tasks = []
 
-@app.route('/todos')
+@app.route('/todos', methods=['POST', 'GET'])
 def todos():
 
+    if request.method == 'POST':
+        task = request.form['task']
+        tasks.append(task)
+
     template = jinja_env.get_template('todos.html')
-    return template.render(task=tasks)
+    return template.render(title="TODOs", tasks=tasks)
 
 app.run()
