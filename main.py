@@ -80,9 +80,18 @@ def validate_time():
             hours=hours,
             minutes=minutes)
 
+
 @app.route('/valid-time')
 def valid_time():
     time = request.args.get('time')
     return '<h1>You submitted {0}. Thanks for submitting a valid time!</h1>'.format(time)
+
+tasks = []
+
+@app.route('/todos')
+def todos():
+
+    template = jinja_env.get_template('todos.html')
+    return template.render(task=tasks)
 
 app.run()
